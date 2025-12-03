@@ -1,6 +1,7 @@
 package com.LearningSpringBoot.mongoDbIntegration.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -11,6 +12,7 @@ import java.util.Date;
 
 @Data
 @Document(collection = "journal_enteries")
+@NoArgsConstructor
 public class JournalEntry {
     @Id
     private ObjectId id;
@@ -18,6 +20,4 @@ public class JournalEntry {
     private String title;
     private String content;
     private LocalDateTime date;
-
-
 }
