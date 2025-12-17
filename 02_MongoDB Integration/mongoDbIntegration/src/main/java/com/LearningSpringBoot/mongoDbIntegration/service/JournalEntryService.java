@@ -23,13 +23,13 @@ public class JournalEntryService {
     @Autowired
     private UserService userService;
 
-    @Transactional //Either complete procedure or in case of failure rollback whatever's done
+//    @Transactional //Either complete procedure or in case of failure rollback whatever's done
     public void saveEntry(JournalEntry journalEntry, String username){
         User user = userService.findByUserName(username);
         journalEntry.setDate(LocalDateTime.now());
         JournalEntry saved = journalEntryRepository.save(journalEntry);
         user.getJournalEntries().add(saved);
-        userService.saveEntry(user);
+        userService.saveUser(user);
     }
 
     public void saveEntry(JournalEntry journalEntry){
@@ -44,10 +44,20 @@ public class JournalEntryService {
         return journalEntryRepository.findById(id);
     }
 
-    public void deleteById(ObjectId id, String username){
-        User user = userService.findByUserName(username);
-        user.getJournalEntries().removeIf(x -> x.getId().equals(id));
-        userService.saveEntry(user);
-        journalEntryRepository.deleteById(id);
+//    @Transactional
+    public boolean deleteById(ObjectId id, String username){
+        boolean removed = false;
+        try{
+            User user = userService.findByUserName(username);
+            removed = user.getJournalEntries().removeIf(x -> x.getId().equals(id));
+            if(removed){
+                userService.saveUser(user);
+                journalEntryRepository.deleteById(id);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            throw new RuntimeException("An error has occured while deleting entry : ", e);
+        }
+        return removed;
     }
 }

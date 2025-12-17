@@ -1,8 +1,6 @@
 package com.LearningSpringBoot.mongoDbIntegration.service;
 
-import com.LearningSpringBoot.mongoDbIntegration.entity.JournalEntry;
 import com.LearningSpringBoot.mongoDbIntegration.entity.User;
-import com.LearningSpringBoot.mongoDbIntegration.repository.JournalEntryRepository;
 import com.LearningSpringBoot.mongoDbIntegration.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.types.ObjectId;
@@ -11,7 +9,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +22,7 @@ public class UserService {
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public void saveEntry(User user){
+    public void saveNewUser(User user){
        try {
            user.setPassword(passwordEncoder.encode(user.getPassword()));
            user.setRoles(Arrays.asList("USER"));
@@ -35,7 +32,7 @@ public class UserService {
        }
     }
 
-    public void saveNewUser(User user){
+    public void saveUser(User user){
         userRepository.save(user);
     }
 
